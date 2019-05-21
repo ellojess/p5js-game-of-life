@@ -1,56 +1,37 @@
 var grid;
+var gameNotPaused = true; 
 
 function setup () {
   createCanvas(400, 400);
-  grid = new Grid(20);
+  frameRate(10); //sees changes slower
+  grid = new Grid(5);
   grid.randomize();
-
 }
 
 function draw () {
   background(250);
-  grid.updateNeighborCounts();
-  grid.updatePopulation();
+ // grid.updateNeighborCounts();
+  //grid.updatePopulation();
   grid.draw();
-  tick();
-}
-
-function tick() { //keeps game going indefinitely
-  // console.time("loop");
-	grid.draw();
-	// console.timeEnd("loop");
-	grid.updatePopulation(tick);
-	requestAnimationFrame(tick);
-}
-
-function mousePressed(){
   
-  grid.updateNeighborCounts();
-  print(grid.cells);
+  if (gameNotPaused){
+    grid.updateNeighborCounts();
+    grid.updatePopulation();
+  }
 }
 
-function pauseGame() { 
-  game = clearTimeout(game); //clears timer set with the setTimeout() method
-}
- 
-function keyDown(e) {
-  if (e.keyCode === 0) pauseGame(); //left button of mouse pressed
-}
- 
-function pauseGame() {
-  if (!gamePaused) {
-    game = clearTimeout(game);
-    gamePaused = true;
-  } else if (gamePaused) {
-    game = setTimeout(loop, 1000 / 30); //evaluates 
-    gamePaused = false;
+function keyPressed(){ //function to pause game
+  if (keyCode === 80){ // P key on keyboard is pressed
+    gameNotPaused = !gameNotPaused;
+  } else { // P key pressed again to unpause 
+    grid.randomize; 
   }
 }
 
 class Grid {
   constructor (cellSize) {
-    //assign values for numberOfColumns and numberOfRows
-    this.cellSize = cellSize;
+    // assign values for numberOfColumns and numberOfRows
+    this.cellSize = cellSize; //
     this.numberOfColumns = floor(width / this.cellSize);
     this.numberOfRows = floor(height / this.cellSize);
     
@@ -58,7 +39,7 @@ class Grid {
     for(var i = 0; i < this.cells.length; i++){
       this.cells[i] = new Array(this.numberOfRows);
     }
-    //go into each position in the 2D array and create a new `Cell`.
+    //go into each position in the 2D array and create a new `Cell`
     for (var column = 0; column < this.numberOfColumns; column ++) {
       for (var row = 0; row < this.numberOfRows; row++) {
         this.cells[column][row] = new Cell(column, row, cellSize);
@@ -78,7 +59,7 @@ class Grid {
   randomize(){
     for (var column = 0; column < this.numberOfColumns; column ++) {
       for (var row = 0; row < this.numberOfRows; row++) {
-        var value = floor(random(2)); //returns interger between 0 and 2
+        var value = floor(random(2));
         this.cells[column][row].setIsAlive(value);
       }
     }
@@ -95,7 +76,7 @@ class Grid {
   getNeighbors(currentCell) {
   var neighbors = [];
 
-  //logic to get neighbors and add them to the array
+  // add logic to get neighbors and add them to the array
   for (var xOffset = -1; xOffset <= 1; xOffset++) {
   for (var yOffset = -1; yOffset <= 1; yOffset++) {
     var neighborColumn = currentCell.column + xOffset;
@@ -159,7 +140,7 @@ class Cell {
   
   draw(){
     if (this.isAlive) {
-      fill(color(200, 0, 200));
+      fill(color(70,130,180));
     } else {
       fill(color(240));
     }
