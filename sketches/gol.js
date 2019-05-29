@@ -20,10 +20,15 @@ function draw () {
   }
 }
 
-function keyPressed(){ //function to pause game
+//function to rerandomize population/reset game
+function mousePressed(){
+grid.randomize();
+}
+
+function keyPressed(){ //pause game
   if (keyCode === 80){ // P key on keyboard is pressed
     gameNotPaused = !gameNotPaused;
-  } else { // P key pressed again to unpause 
+  } else { // P key pressed again to unpause
     grid.randomize; 
   }
 }
@@ -48,7 +53,7 @@ class Grid {
     print(this.cells);
   }
 
-  draw () {
+  draw () { //each cell draws self
     for (var column = 0; column < this.numberOfColumns; column ++) {
       for (var row = 0; row < this.numberOfRows; row++) {
         this.cells[column][row].draw();
@@ -60,7 +65,7 @@ class Grid {
     for (var column = 0; column < this.numberOfColumns; column ++) {
       for (var row = 0; row < this.numberOfRows; row++) {
         var value = floor(random(2));
-        this.cells[column][row].setIsAlive(value);
+        this.cells[column][row].setIsAlive(value); // evaluate to `true` or `false` -> ie if cell is alive or not
       }
     }
   }
@@ -106,20 +111,16 @@ class Grid {
 }
 
   updateNeighborCounts (grid, x, y) {
-  // for each cell in the grid
-    // reset it's neighbor count to 0
-    // get the cell's neighbors
-    // increase liveNeighborCount by 1 for each neighbor that is alive
     
-    for (var column = 0; column < this.numberOfColumns; column ++) {
+    for (var column = 0; column < this.numberOfColumns; column ++) { // for each cell in the grid
       for (var row = 0; row < this.numberOfRows; row++) {
         var currentCell = this.cells[column][row];
-        currentCell.liveNeighborCount = 0;
+        currentCell.liveNeighborCount = 0; // reset neighbor count to 0
 
         var neighborsArray = this.getNeighbors(currentCell);
 
-        for (var position in neighborsArray) {
-          if (neighborsArray[position].isAlive) {
+        for (var position in neighborsArray) {  // get the cell's neighbors
+          if (neighborsArray[position].isAlive) { // increase liveNeighborCount by 1 for each neighbor that is alive
             currentCell.liveNeighborCount += 1;
           }
         }
@@ -156,7 +157,7 @@ class Cell {
     }
   }
   
-  liveOrDie(){ 
+  liveOrDie(){ //rules of the game
     if (this.isAlive && this.liveNeighborCount < 2){
       this.isAlive = false; //underpopulation
     } else if (this.isAlive && this.liveNeighborCount > 3){
